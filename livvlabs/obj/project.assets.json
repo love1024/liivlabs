@@ -4438,6 +4438,29 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
+      },
+      "liivlabs-core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.2",
+        "dependencies": {
+          "liivlabs-infrastructure": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/liivlabs-core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/liivlabs-core.dll": {}
+        }
+      },
+      "liivlabs-infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.2",
+        "compile": {
+          "bin/placeholder/liivlabs-infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/liivlabs-infrastructure.dll": {}
+        }
       }
     }
   },
@@ -12064,13 +12087,24 @@
         "system.xml.xpath.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xpath.xdocument.nuspec"
       ]
+    },
+    "liivlabs-core/1.0.0": {
+      "type": "project",
+      "path": "../liivlabs-core/liivlabs-core.csproj",
+      "msbuildProject": "../liivlabs-core/liivlabs-core.csproj"
+    },
+    "liivlabs-infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../liilabs-infrastructure/liivlabs-infrastructure.csproj",
+      "msbuildProject": "../liilabs-infrastructure/liivlabs-infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.2": [
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
-      "Microsoft.NETCore.App >= 2.2.0"
+      "Microsoft.NETCore.App >= 2.2.0",
+      "liivlabs-core >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -12102,7 +12136,11 @@
       },
       "frameworks": {
         "netcoreapp2.2": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\lovepreetsingh\\source\\repos\\livvlabs\\liivlabs-core\\liivlabs-core.csproj": {
+              "projectPath": "C:\\Users\\lovepreetsingh\\source\\repos\\livvlabs\\liivlabs-core\\liivlabs-core.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
