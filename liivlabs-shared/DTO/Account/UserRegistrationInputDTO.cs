@@ -28,7 +28,7 @@ namespace liivlabs_shared.DTO.Account
         /// Password of the User
         /// </summary>
         [Required(ErrorMessage = "Password is required")]
-        [StringLength(20, MinimumLength = 8)]
+        [StringLength(20, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 20 characters")]
         public string Password { get; set; }
 
         /// <summary>

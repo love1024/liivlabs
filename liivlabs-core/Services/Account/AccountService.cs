@@ -42,21 +42,17 @@ namespace liivlabs_core.Services.Account
         public async Task<UserRegistrationOutputDTO> AddUser(UserRegistrationInputDTO userRegistrationInput)
         {
             string password = userRegistrationInput.Password;
-
-            //if (string.IsNullOrWhiteSpace(password)) {
-            //    throw new ApplicationException("Password is required");
-            //}
-
+    
+            //Check if user already exist
             bool isAlreadyExist = await this.accountRepository.UserExist(userRegistrationInput.EmailAddress);
-
             if(isAlreadyExist) {
-                throw new ApplicationException("User email " + userRegistrationInput.EmailAddress + " already exist");
+                throw new ApplicationException("Email " + userRegistrationInput.EmailAddress + " already exist");
             }
 
             UserEntity user = this.mapper.Map<UserEntity>(userRegistrationInput);
-
+            
+            //Saved User with an ID
             UserEntity savedUser = await this.accountRepository.AddUser(user);
-
             return this.mapper.Map<UserRegistrationOutputDTO>(savedUser);
         }
     }

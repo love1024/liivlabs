@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using liivlabs_core.Helper;
 using liivlabs_shared.DTO.Account;
 using liivlabs_shared.Interfaces.Services.Account;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace liivlabs.Controllers
         public async Task<ActionResult<UserRegistrationOutputDTO>> AddNewUser([FromBody] UserRegistrationInputDTO userRegistrationInput)
         {
             if (!ModelState.IsValid) {
-                return BadRequest(ModelState);
+                return StatusCode(400, Helper.FormatErrorResponse(ModelState));
             }
             try
             {

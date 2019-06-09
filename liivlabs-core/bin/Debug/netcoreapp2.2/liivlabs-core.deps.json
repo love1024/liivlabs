@@ -10,7 +10,8 @@
         "dependencies": {
           "AutoMapper": "8.1.1",
           "liivlabs-infrastructure": "1.0.0",
-          "liivlabs-shared": "1.0.0"
+          "liivlabs-shared": "1.0.0",
+          "Microsoft.AspNetCore.Mvc.Abstractions": "2.2.0.0"
         },
         "runtime": {
           "liivlabs-core.dll": {}
@@ -528,6 +529,14 @@
         "runtime": {
           "liivlabs-shared.dll": {}
         }
+      },
+      "Microsoft.AspNetCore.Mvc.Abstractions/2.2.0.0": {
+        "runtime": {
+          "Microsoft.AspNetCore.Mvc.Abstractions.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
+          }
+        }
       }
     }
   },
@@ -929,6 +938,11 @@
     },
     "liivlabs-shared/1.0.0": {
       "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.AspNetCore.Mvc.Abstractions/2.2.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

@@ -12,3 +12,5 @@ C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.csproj.CopyComplete
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.dll
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.pdb
+C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Abstractions.dll
+C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Abstractions.xml
