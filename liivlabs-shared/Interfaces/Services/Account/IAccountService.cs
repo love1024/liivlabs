@@ -17,5 +17,12 @@ namespace liivlabs_shared.Interfaces.Services.Account
         /// <param name="user"></param>
         /// <returns></returns>
         Task<UserRegistrationOutputDTO> AddUser(UserRegistrationInputDTO userRegistrationInput);
+
+        /// <summary>
+        /// Handle User Authentication
+        /// </summary>
+        /// <param name="userLoginInput"></param>
+        /// <returns></returns>
+        Task<UserLoginOutputDTO> Authenticate(UserLoginInputDTO userLoginInput);
     }
 }

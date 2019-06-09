@@ -12,6 +12,9 @@ using liivlabs_core.Services.Account;
 using AutoMapper;
 using liivlabs_core.Mapper.Account;
 using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace livvlabs
 {
@@ -30,6 +33,24 @@ namespace livvlabs
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
+
+            byte[] key = Encoding.ASCII.GetBytes(this.Configuration["Secret"]);
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateLifetime = true
+                }; 
+            });
 
             // Auto Mapper Configurations, Adding all mapping profiles
             // by scanning one and getting its assembly, which is liivlab-core
@@ -65,7 +86,8 @@ namespace livvlabs
             }
 
             app.UseHttpsRedirection();
-            app.UseCors();
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

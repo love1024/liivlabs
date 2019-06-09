@@ -2,6 +2,7 @@
 using liivlabs_shared.Entities.Account;
 using liivlabs_shared.Interfaces.Repository.Account;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 /// <summary>
@@ -33,6 +34,16 @@ namespace liivlabs_infrastructure.Repositories.Account
             await this.context.SaveChangesAsync();
 
             return user;
+        }
+
+        /// <summary>
+        /// Find user by given email address
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <returns></returns>
+        public async Task<UserEntity> FindUserByEmail(string emailAddress)
+        {
+            return await this.context.User.SingleOrDefaultAsync((user) => user.EmailAddress == emailAddress);
         }
 
         /// <summary>

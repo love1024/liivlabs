@@ -17,7 +17,19 @@ namespace liivlabs_shared.Interfaces.Repository.Account
         /// <returns>Newly Added User</returns>
         Task<UserEntity> AddUser(UserEntity user);
 
+        /// <summary>
+        /// Check if user exist in database
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         Task<bool> UserExist(string email);
+
+        /// <summary>
+        /// Find User by email address
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <returns></returns>
+        Task<UserEntity> FindUserByEmail(string emailAddress);
 
     }
 }
