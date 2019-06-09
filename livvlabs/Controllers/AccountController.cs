@@ -1,58 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using liivlabs_core.DTO;
-using liivlabs_core.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
+using liivlabs_shared.DTO.Account;
+using liivlabs_shared.Interfaces.Services.Account;
 using Microsoft.AspNetCore.Mvc;
 
+/// <summary>
+/// User Account controller to handle 
+/// user authentication
+/// </summary>
 namespace liivlabs.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/account")]
     public class AccountController : ControllerBase
     {
+        /// <summary>
+        /// Account Service
+        /// </summary>
         IAccountService accountService;
 
+        /// <summary>
+        /// Constructor To Inject service
+        /// </summary>
+        /// <param name="accountService">Account Service</param>
         public AccountController(IAccountService accountService)
         {
             this.accountService = accountService;
         }
 
-
-        // GET: api/Account
-        [HttpGet]
-        public IEnumerable<string> Get()
+        /// <summary>
+        /// Create a new User
+        /// </summary>
+        /// <param name="user">Input user data</param>
+        [HttpPost("register")]
+        public async Task<ActionResult<UserRegistrationOutputDTO>> AddNewUser([FromBody] UserRegistrationInputDTO userRegistrationInput)
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Account/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Account
-        [HttpPost]
-        public void Post([FromBody] UserInputDTO user)
-        {
-            accountService.AddUser(user);
-        }
-
-        // PUT: api/Account/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                return await accountService.AddUser(userRegistrationInput);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

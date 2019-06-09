@@ -1,34 +1,35 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace liivlabs_infrastructure.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class migrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "UserEntities",
+                name: "User",
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    HashingSalt = table.Column<string>(nullable: true),
+                    passwordSalt = table.Column<byte[]>(nullable: true),
+                    passwordHashing = table.Column<byte[]>(nullable: true),
                     EmailAddress = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserEntities", x => x.UserId);
+                    table.PrimaryKey("PK_User", x => x.UserId);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserEntities");
+                name: "User");
         }
     }
 }

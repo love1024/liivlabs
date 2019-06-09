@@ -1,14 +1,17 @@
-﻿using liivlabs_core;
-using liivlabs_core.Interfaces.Repository;
-using liivlabs_core.Interfaces.Services;
-using liivlabs_infrastructure.Entities;
-using liivlabs_infrastructure.Repositories;
+﻿using liivlabs_infrastructure.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using liivlabs_shared.Interfaces.Repository.Account;
+using liivlabs_shared.Interfaces.Services.Account;
+using liivlabs_infrastructure.Repositories.Account;
+using liivlabs_core.Services.Account;
+using AutoMapper;
+using liivlabs_core.Mapper.Account;
+using System;
 
 namespace livvlabs
 {
@@ -24,16 +27,27 @@ namespace livvlabs
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            //Register Services
-            services.AddScoped<IAccountService, AccountService>();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddCors();
+
+            // Auto Mapper Configurations, Adding all mapping profiles
+            // by scanning one and getting its assembly, which is liivlab-core
+            // Auto mapper will scan all and will get classes which inherit profile
+            var mappingConfig = new MapperConfiguration(mc => {
+                mc.AddMaps(typeof(UserProfile));
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             //Register Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IAccountService, AccountService>();
 
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=liivlabs;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext<AccountContext>
+
+            //Sql server setup
+            string connection = this.Configuration["ConnectionString"];
+            services.AddDbContext<DatabaseContext>
                 (options => options.UseSqlServer(connection));
         }
 
@@ -51,6 +65,7 @@ namespace livvlabs
             }
 
             app.UseHttpsRedirection();
+            app.UseCors();
             app.UseMvc();
         }
     }

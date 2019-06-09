@@ -1,10 +1,14 @@
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-core.deps.json
-C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-core.runtimeconfig.json
-C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-core.runtimeconfig.dev.json
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-core.dll
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-core.pdb
+C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-infrastructure.dll
+C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-shared.dll
+C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-infrastructure.pdb
+C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\bin\Debug\netcoreapp2.2\liivlabs-shared.pdb
+C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.csprojAssemblyReference.cache
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.csproj.CoreCompileInputs.cache
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.AssemblyInfoInputs.cache
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.AssemblyInfo.cs
+C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.csproj.CopyComplete
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.dll
 C:\Users\lovepreetsingh\source\repos\livvlabs\liivlabs-core\obj\Debug\netcoreapp2.2\liivlabs-core.pdb

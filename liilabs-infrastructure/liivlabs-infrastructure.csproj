@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>liivlabs_infrastructure</RootNamespace>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\liivlabs-core\liivlabs-core.csproj" />
+    <ProjectReference Include="..\liivlabs-shared\liivlabs-shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
