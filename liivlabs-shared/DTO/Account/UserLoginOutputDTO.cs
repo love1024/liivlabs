@@ -25,6 +25,11 @@ namespace liivlabs_shared.DTO.Account
         public string EmailAddress { get; set; }
 
         /// <summary>
+        /// Email is verified or not
+        /// </summary>
+        public bool EmailVerified { get; set; }
+
+        /// <summary>
         /// Token Issued to user
         /// </summary>
         public string token { get; set; }

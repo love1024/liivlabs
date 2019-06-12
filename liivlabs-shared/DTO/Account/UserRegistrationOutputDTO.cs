@@ -29,5 +29,10 @@ namespace liivlabs_shared.DTO.Account
         /// Email Address of the user
         /// </summary>
         public string EmailAddress { get; set; }
+
+        /// <summary>
+        /// Email verified or not
+        /// </summary>
+        public bool EmailVerified { get; set; }
     }
 }

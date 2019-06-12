@@ -15,6 +15,10 @@ using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using liivlabs_shared.Interfaces.SMTP;
+using liivlabs_infrastructure.SMTP;
+using liivlabs_shared.Interfaces.Repository.Auth;
+using liivlabs_core.Services.Auth;
 
 namespace livvlabs
 {
@@ -45,6 +49,7 @@ namespace livvlabs
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
+                    ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateAudience = false,
                     ValidateIssuer = false,
@@ -64,6 +69,8 @@ namespace livvlabs
             //Register Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IAuthService, AuthService>();
 
 
             //Sql server setup

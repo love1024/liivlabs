@@ -10,7 +10,7 @@ using liivlabs_infrastructure.EntityFramework;
 namespace liivlabs_infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190609133234_migrations")]
+    [Migration("20190612175552_migrations")]
     partial class migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,11 +29,15 @@ namespace liivlabs_infrastructure.Migrations
 
                     b.Property<string>("EmailAddress");
 
+                    b.Property<bool>("EmailVerified");
+
                     b.Property<string>("FirstName");
 
                     b.Property<string>("LastName");
 
-                    b.Property<byte[]>("passwordHashing");
+                    b.Property<bool>("PasswordReset");
+
+                    b.Property<byte[]>("passwordHash");
 
                     b.Property<byte[]>("passwordSalt");
 

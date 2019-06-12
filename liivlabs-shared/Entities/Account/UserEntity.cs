@@ -34,11 +34,21 @@ namespace liivlabs_shared.Entities.Account
         /// <summary>
         /// Hashing Generated using password and salt
         /// </summary>
-        public byte[] passwordHashing { get; set; }
+        public byte[] passwordHash { get; set; }
 
         /// <summary>
         /// Email Address of the User
         /// </summary>
         public string EmailAddress { get; set; }
+
+        /// <summary>
+        /// Email is verified or not
+        /// </summary>
+        public bool EmailVerified { get; set; }
+
+        /// <summary>
+        /// Whether Use has reset the password or not
+        /// </summary>
+        public bool PasswordReset { get; set; }
     }
 }

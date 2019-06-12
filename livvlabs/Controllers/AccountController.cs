@@ -81,10 +81,22 @@ namespace liivlabs.Controllers
             }
         }
 
-        [HttpGet]
-        public void Test()
+        /// <summary>
+        /// Send Email for verification
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("sendverification")]
+        public async Task<ActionResult<bool>> SendEmailVerification([FromBody] UserVerifyEmailInputDTO userVerfiyEmailInput)
         {
-
+            try
+            {
+                await this.accountService.SendVerificationEmail(userVerfiyEmailInput.EmailTo);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { message = new List<string> { ex.Message } });
+            }
         }
     }
 }

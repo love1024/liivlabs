@@ -2,7 +2,9 @@
 using liivlabs_shared.DTO.Account;
 using liivlabs_shared.Entities.Account;
 using liivlabs_shared.Interfaces.Repository.Account;
+using liivlabs_shared.Interfaces.Repository.Auth;
 using liivlabs_shared.Interfaces.Services.Account;
+using liivlabs_shared.Interfaces.SMTP;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -36,13 +38,30 @@ namespace liivlabs_core.Services.Account
         private IConfiguration configuration;
 
         /// <summary>
+        /// Client for sending Emails
+        /// </summary>
+        private IEmailSender emailSender;
+
+        /// <summary>
+        /// Auth Service for JWT
+        /// </summary>
+        private IAuthService authService;
+
+        /// <summary>
         /// Inject services
         /// </summary>
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, IConfiguration configuration)
+        public AccountService(
+            IAccountRepository accountRepository,
+            IMapper mapper,
+            IConfiguration configuration,
+            IAuthService authService,
+            IEmailSender emailSender)
         {
             this.accountRepository = accountRepository;
             this.mapper = mapper;
             this.configuration = configuration;
+            this.emailSender = emailSender;
+            this.authService = authService;
         }
         /// <summary>
         /// Handle Add New User request
@@ -51,16 +70,20 @@ namespace liivlabs_core.Services.Account
         /// <returns></returns>
         public async Task<UserRegistrationOutputDTO> AddUser(UserRegistrationInputDTO userRegistrationInput)
         {
-            //TODO Password Hashing and Salt
             string password = userRegistrationInput.Password;
-            
+                
             //Check if user already exist
             bool isAlreadyExist = await this.accountRepository.UserExist(userRegistrationInput.EmailAddress);
             if(isAlreadyExist) {
                 throw new ApplicationException("Email " + userRegistrationInput.EmailAddress + " already exist");
             }
 
+            byte[] passwordHash, passwordSalt;
+            this.authService.CreatePasswordHash(password,out passwordHash,out passwordSalt);
+
             UserEntity user = this.mapper.Map<UserEntity>(userRegistrationInput);
+            user.passwordSalt = passwordSalt;
+            user.passwordHash = passwordHash;
             
             //Saved User with an ID
             UserEntity savedUser = await this.accountRepository.AddUser(user);
@@ -85,35 +108,35 @@ namespace liivlabs_core.Services.Account
                 return null;
             }
 
-            //TODO Verify User password hash
+            bool isValid = this.authService.VerifyPasswordHash(userLoginInput.Password, foundUser.passwordHash, foundUser.passwordSalt);
 
-            return this.IssueNewToken(foundUser);
+            if(isValid == false)
+            {
+                return null;
+            }
+
+            //Generate new token
+            string token = this.authService.IssueNewToken();
+            return new UserLoginOutputDTO()
+            {
+                EmailAddress = foundUser.EmailAddress,
+                FirstName = foundUser.FirstName,
+                LastName = foundUser.LastName,
+                token = token
+            };
         }
 
         /// <summary>
-        /// Issue a new token to user
+        /// Send Verification email to given user
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="email"></param>
         /// <returns></returns>
-        private UserLoginOutputDTO IssueNewToken(UserEntity user)
+        public async Task SendVerificationEmail(string email)
         {
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            byte[] key = Encoding.ASCII.GetBytes(this.configuration["Secret"]);
-            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-            string tokenString = tokenHandler.WriteToken(token);
+            string token = this.authService.IssueNewToken();
 
-            return new UserLoginOutputDTO()
-            {
-                EmailAddress = user.EmailAddress,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                token = tokenString
-            };
+            await this.emailSender.SendEmailForVerification(email, token);
         }
+
     }
 }

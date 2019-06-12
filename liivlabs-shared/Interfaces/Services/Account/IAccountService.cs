@@ -24,5 +24,12 @@ namespace liivlabs_shared.Interfaces.Services.Account
         /// <param name="userLoginInput"></param>
         /// <returns></returns>
         Task<UserLoginOutputDTO> Authenticate(UserLoginInputDTO userLoginInput);
+
+        /// <summary>
+        /// Send Email for verification to given email address
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        Task SendVerificationEmail(string email);
     }
 }

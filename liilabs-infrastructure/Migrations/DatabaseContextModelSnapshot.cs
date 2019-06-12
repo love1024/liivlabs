@@ -27,11 +27,15 @@ namespace liivlabs_infrastructure.Migrations
 
                     b.Property<string>("EmailAddress");
 
+                    b.Property<bool>("EmailVerified");
+
                     b.Property<string>("FirstName");
 
                     b.Property<string>("LastName");
 
-                    b.Property<byte[]>("passwordHashing");
+                    b.Property<bool>("PasswordReset");
+
+                    b.Property<byte[]>("passwordHash");
 
                     b.Property<byte[]>("passwordSalt");
 
