@@ -122,6 +122,7 @@ namespace liivlabs_core.Services.Account
                 EmailAddress = foundUser.EmailAddress,
                 FirstName = foundUser.FirstName,
                 LastName = foundUser.LastName,
+                EmailVerified = foundUser.EmailVerified,
                 token = token
             };
         }
@@ -138,5 +139,32 @@ namespace liivlabs_core.Services.Account
             await this.emailSender.SendEmailForVerification(email, token);
         }
 
+        /// <summary>
+        /// Set User email to verified
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public async Task<UserVerifyEmailOutputDTO> SetEmailVerified(UserVerifyEmailInputDTO userVerifyEmailInput)
+        {
+            if(string.IsNullOrWhiteSpace(userVerifyEmailInput.EmailAddress))
+            {
+                return null;
+            }
+
+            UserEntity foundUser = await this.accountRepository.FindUserByEmail(userVerifyEmailInput.EmailAddress);
+            if(foundUser.EmailVerified)
+            {
+                return null;
+            }
+
+            //Update Email Verified
+            foundUser.EmailVerified = true;
+            await this.accountRepository.UpdateUser(foundUser);
+
+            return new UserVerifyEmailOutputDTO()
+            {
+                success = true
+            };
+        }
     }
 }

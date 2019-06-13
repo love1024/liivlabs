@@ -13,7 +13,7 @@ namespace liivlabs_shared.DTO.Account
         /// <summary>
         /// User Id assigned by database
         /// </summary>
-        public string UserId { get; set; }
+        public int UserId { get; set; }
 
         /// <summary>
         /// First Name of the user

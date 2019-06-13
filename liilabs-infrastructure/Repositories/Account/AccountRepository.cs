@@ -47,6 +47,17 @@ namespace liivlabs_infrastructure.Repositories.Account
         }
 
         /// <summary>
+        /// Update the given user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task UpdateUser(UserEntity user)
+        {
+            this.context.User.Update(user);
+            await this.context.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Check whether user exist or not
         /// </summary>
         /// <param name="email"></param>

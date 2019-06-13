@@ -10,8 +10,8 @@ namespace liivlabs_shared.DTO.Account
     public class UserVerifyEmailInputDTO
     {
         /// <summary>
-        /// Email Address where verfication link to send
+        /// Email Address of the user
         /// </summary>
-        public string EmailTo;
+        public string EmailAddress;
     }
 }

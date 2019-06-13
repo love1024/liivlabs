@@ -86,12 +86,36 @@ namespace liivlabs.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("sendverification")]
-        public async Task<ActionResult<bool>> SendEmailVerification([FromBody] UserVerifyEmailInputDTO userVerfiyEmailInput)
+        [AllowAnonymous]
+        public async Task<ActionResult<UserSendEmailVerificationOutputDTO>> SendEmailVerification([FromBody] UserSendEmailVerificationInputDTO userSendVerfiyEmailInput)
         {
             try
             {
-                await this.accountService.SendVerificationEmail(userVerfiyEmailInput.EmailTo);
-                return true;
+                await this.accountService.SendVerificationEmail(userSendVerfiyEmailInput.EmailTo);
+                return new UserSendEmailVerificationOutputDTO() { success = true};
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { message = new List<string> { ex.Message } });
+            }
+        }
+
+        /// <summary>
+        /// Verify email verification
+        /// </summary>
+        /// <param name="userVerifyEmailInput"></param>
+        /// <returns></returns>
+        [HttpPost("verifyemail")]
+        public async Task<ActionResult<UserVerifyEmailOutputDTO>> VerifyEmail([FromBody] UserVerifyEmailInputDTO userVerifyEmailInput)
+        {
+            try
+            {
+                UserVerifyEmailOutputDTO result = await this.accountService.SetEmailVerified(userVerifyEmailInput);
+                if(result == null)
+                {
+                    return BadRequest(new { message = new List<string> { "Email already Verified or user not found" } });
+                }
+                return result;
             }
             catch(Exception ex)
             {

@@ -31,5 +31,12 @@ namespace liivlabs_shared.Interfaces.Repository.Account
         /// <returns></returns>
         Task<UserEntity> FindUserByEmail(string emailAddress);
 
+        /// <summary>
+        /// Update the given user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task UpdateUser(UserEntity user);
+
     }
 }

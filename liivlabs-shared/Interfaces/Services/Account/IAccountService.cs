@@ -31,5 +31,12 @@ namespace liivlabs_shared.Interfaces.Services.Account
         /// <param name="email"></param>
         /// <returns></returns>
         Task SendVerificationEmail(string email);
+
+        /// <summary>
+        /// Set user email to verified
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        Task<UserVerifyEmailOutputDTO> SetEmailVerified(UserVerifyEmailInputDTO userVerifyEmailInput);
     }
 }
