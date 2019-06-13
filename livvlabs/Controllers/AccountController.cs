@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using liivlabs_core.Helper;
 using liivlabs_shared.DTO.Account;
+using liivlabs_shared.DTO.Success;
 using liivlabs_shared.Interfaces.Services.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -87,12 +88,12 @@ namespace liivlabs.Controllers
         /// <returns></returns>
         [HttpPost("sendverification")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserSendEmailVerificationOutputDTO>> SendEmailVerification([FromBody] UserSendEmailVerificationInputDTO userSendVerfiyEmailInput)
+        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> SendEmailVerification([FromBody] UserSendEmailVerificationInputDTO userSendVerfiyEmailInput)
         {
             try
             {
                 await this.accountService.SendVerificationEmail(userSendVerfiyEmailInput.EmailTo);
-                return new UserSendEmailVerificationOutputDTO() { success = true};
+                return new CommonSuccessMessageOutputDTO() { Success = true};
             }
             catch(Exception ex)
             {
@@ -100,17 +101,49 @@ namespace liivlabs.Controllers
             }
         }
 
+        [HttpPost("sendpasswordreset")]
+        [AllowAnonymous]
+        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> SendPasswordResetEmail([FromBody] UserSendPasswordResetEmailInputDTO userSendPasswordResetEmailInput)
+        {
+            try
+            {
+                await this.accountService.SendPasswordResetEmail(userSendPasswordResetEmailInput.EmailTo);
+                return new CommonSuccessMessageOutputDTO() { Success = true };
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { message = new List<string> { ex.Message } });
+            }
+        }
+
+        [HttpPost("resetpassword")]
+        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> ResetPassword([FromBody] UserResetPasswordInputDTO userResetPasswordInput)
+        {
+            try
+            {
+                CommonSuccessMessageOutputDTO result = await this.accountService.ResetPassword(userResetPasswordInput);
+                if (result == null)
+                {
+                    return BadRequest(new { message = new List<string> { "Password already reset or user not found" } });
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = new List<string> { ex.Message } });
+            }
+        }
         /// <summary>
         /// Verify email verification
         /// </summary>
         /// <param name="userVerifyEmailInput"></param>
         /// <returns></returns>
         [HttpPost("verifyemail")]
-        public async Task<ActionResult<UserVerifyEmailOutputDTO>> VerifyEmail([FromBody] UserVerifyEmailInputDTO userVerifyEmailInput)
+        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> VerifyEmail([FromBody] UserVerifyEmailInputDTO userVerifyEmailInput)
         {
             try
             {
-                UserVerifyEmailOutputDTO result = await this.accountService.SetEmailVerified(userVerifyEmailInput);
+                CommonSuccessMessageOutputDTO result = await this.accountService.SetEmailVerified(userVerifyEmailInput);
                 if(result == null)
                 {
                     return BadRequest(new { message = new List<string> { "Email already Verified or user not found" } });

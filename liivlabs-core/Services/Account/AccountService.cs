@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using liivlabs_shared.DTO.Account;
+using liivlabs_shared.DTO.Success;
 using liivlabs_shared.Entities.Account;
 using liivlabs_shared.Interfaces.Repository.Account;
 using liivlabs_shared.Interfaces.Repository.Auth;
@@ -128,12 +129,83 @@ namespace liivlabs_core.Services.Account
         }
 
         /// <summary>
+        /// Reset user password
+        /// </summary>
+        /// <param name="userResetPasswordInput"></param>
+        /// <returns></returns>
+        public async Task<CommonSuccessMessageOutputDTO> ResetPassword(UserResetPasswordInputDTO userResetPasswordInput)
+        {
+            if (string.IsNullOrWhiteSpace(userResetPasswordInput.EmailAddress))
+            {
+                return null;
+            }
+
+            UserEntity foundUser = await this.accountRepository.FindUserByEmail(userResetPasswordInput.EmailAddress);
+            if (foundUser.PasswordReset)
+            {
+                return null;
+            }
+
+            // Update user password
+            byte[] passwordHash, passwordSalt;
+            this.authService.CreatePasswordHash(userResetPasswordInput.NewPassword, out passwordHash, out passwordSalt);
+            foundUser.passwordHash = passwordHash;
+            foundUser.passwordSalt = passwordSalt;
+            foundUser.PasswordReset = true;
+
+            // Update user
+            await this.accountRepository.UpdateUser(foundUser);
+
+            return new CommonSuccessMessageOutputDTO()
+            {
+                Success = true
+            };
+        }
+
+        /// <summary>
+        /// Send Password reset link to given email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public async Task SendPasswordResetEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ApplicationException("Email is required");
+            }
+
+            UserEntity foundUser = await this.accountRepository.FindUserByEmail(email);
+            if (foundUser == null)
+            {
+                throw new ApplicationException("User is not found");
+            }
+
+            foundUser.PasswordReset = false;
+            await this.accountRepository.UpdateUser(foundUser);
+
+            string token = this.authService.IssueNewToken();
+
+            await this.emailSender.SendPasswordResetEmail(email, token);
+        }
+
+        /// <summary>
         /// Send Verification email to given user
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
         public async Task SendVerificationEmail(string email)
         {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ApplicationException("Email is required");
+            }
+
+            UserEntity foundUser = await this.accountRepository.FindUserByEmail(email);
+            if (foundUser == null)
+            {
+                throw new ApplicationException("User is not found");
+            }
+
             string token = this.authService.IssueNewToken();
 
             await this.emailSender.SendEmailForVerification(email, token);
@@ -144,7 +216,7 @@ namespace liivlabs_core.Services.Account
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
-        public async Task<UserVerifyEmailOutputDTO> SetEmailVerified(UserVerifyEmailInputDTO userVerifyEmailInput)
+        public async Task<CommonSuccessMessageOutputDTO> SetEmailVerified(UserVerifyEmailInputDTO userVerifyEmailInput)
         {
             if(string.IsNullOrWhiteSpace(userVerifyEmailInput.EmailAddress))
             {
@@ -161,9 +233,9 @@ namespace liivlabs_core.Services.Account
             foundUser.EmailVerified = true;
             await this.accountRepository.UpdateUser(foundUser);
 
-            return new UserVerifyEmailOutputDTO()
+            return new CommonSuccessMessageOutputDTO()
             {
-                success = true
+                Success = true
             };
         }
     }

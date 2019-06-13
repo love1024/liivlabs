@@ -4,11 +4,11 @@ using System.Text;
 
 namespace liivlabs_shared.DTO.Account
 {
-    public class UserSendEmailVerificationOutputDTO
+    public class UserSendPasswordResetEmailInputDTO
     {
         /// <summary>
-        /// Whether sending email is success or not
+        /// Send email to
         /// </summary>
-        public bool success { get; set; }
+        public string EmailTo;
     }
 }

@@ -18,5 +18,13 @@ namespace liivlabs_shared.Interfaces.SMTP
         /// <param name="token">tokent to add</param>"
         /// <returns></returns>
         Task SendEmailForVerification(string emailTo, string token);
+
+        /// <summary>
+        /// Send Password Reset link
+        /// </summary>
+        /// <param name="emailTo"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        Task SendPasswordResetEmail(string emailTo, string token);
     }
 }

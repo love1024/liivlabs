@@ -1,4 +1,5 @@
 ﻿using liivlabs_shared.DTO.Account;
+using liivlabs_shared.DTO.Success;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -37,6 +38,21 @@ namespace liivlabs_shared.Interfaces.Services.Account
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
-        Task<UserVerifyEmailOutputDTO> SetEmailVerified(UserVerifyEmailInputDTO userVerifyEmailInput);
+        Task<CommonSuccessMessageOutputDTO> SetEmailVerified(UserVerifyEmailInputDTO userVerifyEmailInput);
+
+        /// <summary>
+        /// Send password reset link to given email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        Task SendPasswordResetEmail(string email);
+
+        /// <summary>
+        /// Reset user password
+        /// </summary>
+        /// <param name="userResetPasswordInput"></param>
+        /// <returns></returns>
+        Task<CommonSuccessMessageOutputDTO> ResetPassword(UserResetPasswordInputDTO userResetPasswordInput);
+
     }
 }

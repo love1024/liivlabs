@@ -32,14 +32,34 @@ namespace liivlabs_infrastructure.SMTP
         public async Task SendEmailForVerification(string emailTo, string token)
         {
             //Get email template and insert email and token
-            string subject = "LIIVLABS- Email Verification";
-            string emailContent = System.IO.File.ReadAllText(@"./template/file.txt");
+            string subject = "EZNOTES: Email Verification";
+            string emailContent = System.IO.File.ReadAllText(@"./template/emailverify.txt");
             emailContent = emailContent.Replace("{{EMAIL}}", emailTo).Replace("{{CODE}}",token);
 
             SendGridClient client = new SendGridClient(this.sendGridSecret);
             EmailAddress from = new EmailAddress("lsk18mto@gmail.com");
             EmailAddress to = new EmailAddress(emailTo);
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject,"", emailContent);
+
+            await client.SendEmailAsync(msg);
+        }
+
+        /// <summary>
+        /// Send password reset link to given user
+        /// </summary>
+        /// <param name="emailTo"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task  SendPasswordResetEmail(string emailTo, string token)
+        {
+            string subject = "EZNOTES: Password reset";
+            string emailContent = System.IO.File.ReadAllText(@"./template/passwordreset.txt");
+            emailContent = emailContent.Replace("{{EMAIL}}", emailTo).Replace("{{CODE}}", token);
+
+            SendGridClient client = new SendGridClient(this.sendGridSecret);
+            EmailAddress from = new EmailAddress("lsk18mto@gmail.com");
+            EmailAddress to = new EmailAddress(emailTo);
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, "", emailContent);
 
             await client.SendEmailAsync(msg);
         }
