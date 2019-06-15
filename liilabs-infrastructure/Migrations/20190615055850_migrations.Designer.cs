@@ -10,7 +10,7 @@ using liivlabs_infrastructure.EntityFramework;
 namespace liivlabs_infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190612175552_migrations")]
+    [Migration("20190615055850_migrations")]
     partial class migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
