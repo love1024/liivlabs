@@ -23,20 +23,20 @@ namespace liivlabs_shared.Interfaces.Services
         /// </summary>
         /// <param name="userAddInputDTO"></param>
         /// <returns></returns>
-        Task<UserOutoutDTO> AddNewUser(UserAddInputDTO userAddInputDTO);
+        Task<UserOutoutDTO> AddNewUser(UserAddInputDTO userAddInputDTO,int userId);
 
         /// <summary>
         /// Update Give User
         /// </summary>
         /// <param name="userUpdateInputDTO"></param>
         /// <returns></returns>
-        Task UpdateUser(UserUpdateInputDTO userUpdateInputDTO);
+        Task UpdateUser(UserUpdateInputDTO userUpdateInputDTO,int userId);
 
         /// <summary>
         /// Delete user
         /// </summary>
         /// <param name="userDeleteInputDTO"></param>
         /// <returns></returns>
-        Task DeleteUser(UserDeleteInputDTO userDeleteInputDTO);
+        Task DeleteUser(UserDeleteInputDTO userDeleteInputDTO, int userId);
     }
 }

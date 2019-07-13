@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace liivlabs.Controllers
 {
     [Route("api/user")]
-    [Authorize (Roles = Roles.Admin + "," + Roles.Business)]
+    [Authorize (Roles = Roles.Admin + "," + Roles.Business + "," + Roles.BusinessUser)]
     public class UserController : Controller
     {
         private IUserService userService;
@@ -41,7 +41,7 @@ namespace liivlabs.Controllers
         {
             try
             {
-                IList<UserOutoutDTO> users = await this.userService.GetAllUsers();
+                IList<UserOutoutDTO> users = await this.userService.GetAllUsers(userId);
                 return users.ToList();
             }
             catch(Exception ex)
@@ -56,11 +56,11 @@ namespace liivlabs.Controllers
         /// <returns></returns>
         [HttpPost("add")]
 
-        public async Task<ActionResult<UserOutoutDTO>> AddNewUser([FromBody] UserAddInputDTO userAddInputDTO)
+        public async Task<ActionResult<UserOutoutDTO>> AddNewUser([FromBody] UserAddInputDTO userAddInputDTO, int userId)
         {
             try
             {
-                return await this.userService.AddNewUser(userAddInputDTO);
+                return await this.userService.AddNewUser(userAddInputDTO,userId);
             }
             catch (Exception ex)
             {
@@ -74,11 +74,11 @@ namespace liivlabs.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("update")]
-        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> UpdateUser([FromBody] UserUpdateInputDTO userUpdateInputDTO)
+        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> UpdateUser([FromBody] UserUpdateInputDTO userUpdateInputDTO, int userId)
         {
             try
             {
-                await this.userService.UpdateUser(userUpdateInputDTO);
+                await this.userService.UpdateUser(userUpdateInputDTO, userId);
                 return new CommonSuccessMessageOutputDTO() { Success = true };
             }
             catch (Exception ex)
@@ -88,11 +88,11 @@ namespace liivlabs.Controllers
         }
 
         [HttpPost("delete")]
-        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> DeleteUser([FromBody] UserDeleteInputDTO userDeleteInputDTO)
+        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> DeleteUser([FromBody] UserDeleteInputDTO userDeleteInputDTO, int userId)
         {
             try
-            {
-                await this.userService.DeleteUser(userDeleteInputDTO);
+            {   
+                await this.userService.DeleteUser(userDeleteInputDTO, userId);
                 return new CommonSuccessMessageOutputDTO() { Success = true };
             }
             catch(Exception ex)

@@ -55,5 +55,10 @@ namespace liivlabs_shared.Entities.Account
         /// Is this User admin
         /// </summary>
         public string Role { get; set; }
+
+        /// <summary>
+        /// Parent User for Current user
+        /// </summary>
+        public int ParentUserId { get; set; }
     }
 }
