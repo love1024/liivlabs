@@ -8,6 +8,7 @@ using liivlabs_shared.Interfaces.Services.Account;
 using liivlabs_shared.Interfaces.SMTP;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -117,14 +118,16 @@ namespace liivlabs_core.Services.Account
             }
 
             //Generate new token
-            string token = this.authService.IssueNewToken();
+            string token = this.authService.IssueNewToken(foundUser.Role);
             return new UserLoginOutputDTO()
             {
                 EmailAddress = foundUser.EmailAddress,
                 FirstName = foundUser.FirstName,
                 LastName = foundUser.LastName,
                 EmailVerified = foundUser.EmailVerified,
-                token = token
+                Expire = DateTime.UtcNow.AddDays(2),
+                token = token,
+                Role = foundUser.Role
             };
         }
 
@@ -185,7 +188,16 @@ namespace liivlabs_core.Services.Account
 
             string token = this.authService.IssueNewToken();
 
-            await this.emailSender.SendPasswordResetEmail(email, token);
+            IRestResponse response = await this.emailSender.SendPasswordResetEmail(email, token);
+            if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                throw new ApplicationException(response.Content);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden ||
+                    response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         /// <summary>
@@ -208,7 +220,16 @@ namespace liivlabs_core.Services.Account
 
             string token = this.authService.IssueNewToken();
 
-            await this.emailSender.SendEmailForVerification(email, token);
+            IRestResponse response =  await this.emailSender.SendEmailForVerification(email, token);
+            if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                throw new ApplicationException(response.Content);
+            }
+            else if(response.StatusCode == System.Net.HttpStatusCode.Forbidden || 
+                    response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         /// <summary>

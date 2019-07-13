@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 
 /// <summary>
-/// User login response
+/// USER DTO
 /// </summary>
-namespace liivlabs_shared.DTO.Account
+
+namespace liivlabs_shared.DTO.User
 {
-    public class UserLoginOutputDTO
+    public class UserOutoutDTO
     {
+        /// <summary>
+        /// User Id assigned by database
+        /// </summary>
+        public int UserId { get; set; }
+
         /// <summary>
         /// First Name of the user
         /// </summary>
@@ -25,22 +31,12 @@ namespace liivlabs_shared.DTO.Account
         public string EmailAddress { get; set; }
 
         /// <summary>
-        /// Email is verified or not
+        /// Email verified or not
         /// </summary>
         public bool EmailVerified { get; set; }
 
         /// <summary>
-        /// Token Issued to user
-        /// </summary>
-        public string token { get; set; }
-
-        /// <summary>
-        /// Token expiry time
-        /// </summary>
-        public DateTime Expire { get; set; }
-
-        /// <summary>
-        /// Role of the user
+        /// Is User Admin
         /// </summary>
         public string Role { get; set; }
     }

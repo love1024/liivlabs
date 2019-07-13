@@ -8,4 +8,8 @@
     <StartupObject />
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="RestSharp" Version="106.6.9" />
+  </ItemGroup>
+
 </Project>

@@ -14,7 +14,7 @@ namespace liivlabs_shared.Interfaces.Repository.Auth
         /// Issue new JWT token
         /// </summary>
         /// <returns></returns>
-        string IssueNewToken();
+        string IssueNewToken(string role = "User");
 
         /// <summary>
         /// Create password Hash with generated

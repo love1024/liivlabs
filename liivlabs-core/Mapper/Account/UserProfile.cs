@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using liivlabs_shared;
+using liivlabs_shared.DTO;
 using liivlabs_shared.DTO.Account;
+using liivlabs_shared.DTO.User;
 using liivlabs_shared.Entities.Account;
 using System;
 using System.Collections.Generic;
@@ -18,6 +21,10 @@ namespace liivlabs_core.Mapper.Account
         {
             CreateMap<UserRegistrationInputDTO, UserEntity>();
             CreateMap<UserEntity, UserRegistrationOutputDTO>();
+            CreateMap<UserEntity, UserOutoutDTO>();
+            CreateMap<UserUpdateInputDTO, UserEntity>();
+            CreateMap<UserEntity, UserEntity>();
+            CreateMap<UserAddInputDTO, UserEntity>();
         }
     }
 }

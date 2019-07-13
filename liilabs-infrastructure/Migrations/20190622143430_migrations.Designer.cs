@@ -10,7 +10,7 @@ using liivlabs_infrastructure.EntityFramework;
 namespace liivlabs_infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190615055850_migrations")]
+    [Migration("20190622143430_migrations")]
     partial class migrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,8 @@ namespace liivlabs_infrastructure.Migrations
                     b.Property<string>("LastName");
 
                     b.Property<bool>("PasswordReset");
+
+                    b.Property<string>("Role");
 
                     b.Property<byte[]>("passwordHash");
 

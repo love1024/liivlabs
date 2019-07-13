@@ -19,6 +19,14 @@ using liivlabs_shared.Interfaces.SMTP;
 using liivlabs_infrastructure.SMTP;
 using liivlabs_shared.Interfaces.Repository.Auth;
 using liivlabs_core.Services.Auth;
+using liivlabs_shared.Interfaces.Services;
+using liivlabs_core.Services.User;
+using liivlabs_shared.Interfaces.Repository.User;
+using liivlabs_infrastructure.Repositories.User;
+using liivlabs_shared.Interfaces.Repository.Access;
+using liivlabs_infrastructure.Repositories.Access;
+using liivlabs_shared.Interfaces.Services.Access;
+using liivlabs_core.Services;
 
 namespace livvlabs
 {
@@ -37,6 +45,7 @@ namespace livvlabs
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
+            services.AddHttpClient<EmailSender>();
 
             byte[] key = Encoding.ASCII.GetBytes(this.Configuration["Secret"]);
             services.AddAuthentication(options =>
@@ -71,6 +80,10 @@ namespace livvlabs
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserAccessRepository, UserAccessRepository>();
+            services.AddScoped<IAccessService, AccessService>();
 
 
             //Sql server setup

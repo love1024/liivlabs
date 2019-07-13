@@ -50,5 +50,10 @@ namespace liivlabs_shared.Entities.Account
         /// Whether Use has reset the password or not
         /// </summary>
         public bool PasswordReset { get; set; }
+
+        /// <summary>
+        /// Is this User admin
+        /// </summary>
+        public string Role { get; set; }
     }
 }

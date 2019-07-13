@@ -20,7 +20,8 @@ namespace liivlabs_infrastructure.Migrations
                     passwordHash = table.Column<byte[]>(nullable: true),
                     EmailAddress = table.Column<string>(nullable: true),
                     EmailVerified = table.Column<bool>(nullable: false),
-                    PasswordReset = table.Column<bool>(nullable: false)
+                    PasswordReset = table.Column<bool>(nullable: false),
+                    Role = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

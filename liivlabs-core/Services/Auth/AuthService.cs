@@ -1,9 +1,11 @@
-﻿using liivlabs_shared.Interfaces.Repository.Auth;
+﻿using liivlabs_core.Helper;
+using liivlabs_shared.Interfaces.Repository.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,12 +50,16 @@ namespace liivlabs_core.Services.Auth
         /// Issue new token
         /// </summary>
         /// <returns></returns>
-        public string IssueNewToken()
+        public string IssueNewToken(string role = Roles.User)
         {
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(this.configuration["Secret"]);
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Role, role)
+                }),
                 Expires = DateTime.UtcNow.AddDays(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
