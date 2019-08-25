@@ -39,5 +39,10 @@ namespace liivlabs_shared
         /// </summary>
         public string Role { get; set; }
 
+        /// <summary>
+        /// Max Users allowed for Business Users by Admin
+        /// </summary>
+        public int MaxUsers { get; set; }
+
     }
 }

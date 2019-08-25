@@ -100,5 +100,37 @@ namespace liivlabs.Controllers
                 return BadRequest(new { message = new List<string> { ex.Message } });
             }
         }
+
+        [HttpPost("password")]
+        public async Task<ActionResult<CommonSuccessMessageOutputDTO>> ChangePassword([FromBody] UserPasswordChangeInputDTO inputDto)
+        {
+            try
+            {
+                await this.userService.ChangePassword(inputDto);
+                return new CommonSuccessMessageOutputDTO() { Success = true };
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = new List<string> { ex.Message } });
+            }
+        }
+
+        /// <summary>
+        /// Get User Info
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("info")]
+        public async Task<ActionResult<UserOutoutDTO>> UserInfo(int userId)
+        {
+            try
+            {
+                return await this.userService.GetUserInfo(userId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = new List<string> { ex.Message } });
+            }
+        }
     }
 }

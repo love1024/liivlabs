@@ -60,5 +60,20 @@ namespace liivlabs_shared.Entities.Account
         /// Parent User for Current user
         /// </summary>
         public int ParentUserId { get; set; }
+
+        /// <summary>
+        /// Password changed by user or not
+        /// </summary>
+        public bool PasswordChanged { get; set; }
+
+        /// <summary>
+        /// Max Users allowed for Business Users by Admin
+        /// </summary>
+        public int MaxUsers { get; set; }
+
+        /// <summary>
+        /// Added Users
+        /// </summary>
+        public int AddedUsers { get; set; }
     }
 }

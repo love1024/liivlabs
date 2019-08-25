@@ -10,6 +10,11 @@ namespace liivlabs_shared.DTO.Account
     public class UserLoginOutputDTO
     {
         /// <summary>
+        /// User Id
+        /// </summary>
+        public int userId { get; set; }
+
+        /// <summary>
         /// First Name of the user
         /// </summary>
         public string FirstName { get; set; }
@@ -43,5 +48,20 @@ namespace liivlabs_shared.DTO.Account
         /// Role of the user
         /// </summary>
         public string Role { get; set; }
+
+        /// <summary>
+        /// Password changed by user or not
+        /// </summary>
+        public bool PasswordChanged { get; set; }
+
+        /// <summary>
+        /// Max Users allowed for Business Users by Admin
+        /// </summary>
+        public int MaxUsers { get; set; }
+
+        /// <summary>
+        /// Added Users
+        /// </summary>
+        public int AddedUsers { get; set; }
     }
 }

@@ -84,6 +84,7 @@ namespace livvlabs
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserAccessRepository, UserAccessRepository>();
             services.AddScoped<IAccessService, AccessService>();
+            services.AddScoped<IFileService, FileService>();
 
 
             //Sql server setup

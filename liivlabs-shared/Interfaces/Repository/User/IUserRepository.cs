@@ -44,5 +44,6 @@ namespace liivlabs_shared.Interfaces.Repository.User
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<UserEntity> GetUser(int userId);
+
     }
 }

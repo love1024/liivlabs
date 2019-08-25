@@ -9,6 +9,8 @@ using liivlabs_shared.Interfaces.Repository.Access;
 using liivlabs_shared.Interfaces.Repository.Auth;
 using liivlabs_shared.Interfaces.Repository.User;
 using liivlabs_shared.Interfaces.Services;
+using liivlabs_shared.Interfaces.Services.Access;
+using liivlabs_shared.Interfaces.Services.Account;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,14 +44,25 @@ namespace liivlabs_core.Services.User
         private IAuthService authService;
 
         /// <summary>
+        /// Access service
+        /// </summary>
+        private IAccountService accountService;
+
+        /// <summary>
         /// Get User Repository
         /// </summary>
-        public UserService(IUserRepository userRepository, IUserAccessRepository userAccessRepository, IMapper mapper, IAuthService authService)
+        public UserService(
+            IUserRepository userRepository,
+            IUserAccessRepository userAccessRepository,
+            IMapper mapper,
+            IAuthService authService,
+            IAccountService accountService)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
             this.userAccessRepository = userAccessRepository;
             this.authService = authService;
+            this.accountService = accountService;
         }
 
         /// <summary>
@@ -70,6 +83,15 @@ namespace liivlabs_core.Services.User
 
             if (loggedInUser.Role == Roles.BusinessUser)
             {
+                UserEntity parent = await this.userRepository.GetUser(loggedInUser.ParentUserId);
+                if (parent.AddedUsers + 1 > parent.MaxUsers)
+                {
+                    throw new ApplicationException("Business cannot add more users");
+                }
+                // Update user added users
+                parent.AddedUsers = parent.AddedUsers + 1;
+                await this.userRepository.UpdateUser(parent);
+
                 UserAccessEntity userAccess = await this.userAccessRepository.GetUserAccess(userId);
                 hasAccessToCreate = userAccess != null ? userAccess.Delete : false;
                 newUser.ParentUserId = loggedInUser.ParentUserId;
@@ -78,11 +100,27 @@ namespace liivlabs_core.Services.User
             if(loggedInUser.Role == Roles.Business)
             {
                 newUser.ParentUserId = loggedInUser.UserId;
+                if (loggedInUser.AddedUsers + 1 > loggedInUser.MaxUsers)
+                {
+                    throw new ApplicationException("Business cannot add more users");
+                }
             }
 
             if (hasAccessToCreate)
             {
                 UserEntity updatedUser = await this.userRepository.AddUser(newUser);
+                if(!updatedUser.EmailVerified)
+                {
+                    await this.accountService.SendVerificationEmail(updatedUser.EmailAddress);
+                }
+
+                if (loggedInUser.Role == Roles.Business)
+                {
+                    // Update user added users
+                    loggedInUser.AddedUsers = loggedInUser.AddedUsers + 1;
+                    await this.userRepository.UpdateUser(loggedInUser);
+                }
+
                 return this.mapper.Map<UserOutoutDTO>(updatedUser);
             }
             else
@@ -90,6 +128,24 @@ namespace liivlabs_core.Services.User
                 throw new UnauthorizedAccessException("User don't have access to perform the add user operation");
             }
             
+        }
+
+        /// <summary>
+        /// Change User password
+        /// </summary>
+        /// <param name="inputDto"></param>
+        /// <returns></returns>
+        public async Task ChangePassword(UserPasswordChangeInputDTO inputDto)
+        {
+            UserEntity foundUser = await this.userRepository.GetUser(inputDto.UserId);
+
+            byte[] passwordHash, passwordSalt;
+            this.authService.CreatePasswordHash(inputDto.Password, out passwordHash, out passwordSalt);
+            foundUser.passwordSalt = passwordSalt;
+            foundUser.passwordHash = passwordHash;
+            foundUser.PasswordChanged = true;
+
+            await this.userRepository.UpdateUser(foundUser);
         }
 
         /// <summary>
@@ -132,7 +188,7 @@ namespace liivlabs_core.Services.User
             UserEntity loggedInUser = await this.userRepository.GetUser(userId);
             allUsers = (List<UserEntity>)await this.userRepository.GetAllUsers();
 
-            if (loggedInUser.Role == Roles.Admin)
+            if (loggedInUser.Role == Roles.Business)
             {
                 allUsers = allUsers.FindAll(user => user.ParentUserId == loggedInUser.UserId);
 
@@ -155,6 +211,17 @@ namespace liivlabs_core.Services.User
 
             //Map to user output dto
             return this.mapper.Map<IList<UserOutoutDTO>>(allUsers);
+        }
+
+        /// <summary>
+        /// Get User info
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<UserOutoutDTO> GetUserInfo(int userId)
+        {
+            UserEntity user =  await this.userRepository.GetUser(userId);
+            return this.mapper.Map<UserOutoutDTO>(user);
         }
 
 
@@ -189,6 +256,7 @@ namespace liivlabs_core.Services.User
                 foundUser.Role = userUpdateInputDTO.Role;
                 foundUser.EmailAddress = userUpdateInputDTO.EmailAddress;
                 foundUser.EmailVerified = userUpdateInputDTO.EmailVerified;
+                foundUser.MaxUsers = userUpdateInputDTO.MaxUsers;
 
                 await this.userRepository.UpdateUser(foundUser);
             }

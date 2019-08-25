@@ -30,5 +30,10 @@ namespace liivlabs_shared.DTO
         /// Is User Admin
         /// </summary>
         public string Role { get; set; }
+
+        /// <summary>
+        /// Max Users allowed for Business Users by Admin
+        /// </summary>
+        public int MaxUsers { get; set; }
     }
 }

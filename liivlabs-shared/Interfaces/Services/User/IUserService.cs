@@ -19,6 +19,13 @@ namespace liivlabs_shared.Interfaces.Services
         Task<IList<UserOutoutDTO>> GetAllUsers(int userId);
 
         /// <summary>
+        /// Get User by id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<UserOutoutDTO> GetUserInfo(int userId);
+
+        /// <summary>
         /// Add New User
         /// </summary>
         /// <param name="userAddInputDTO"></param>
@@ -38,5 +45,12 @@ namespace liivlabs_shared.Interfaces.Services
         /// <param name="userDeleteInputDTO"></param>
         /// <returns></returns>
         Task DeleteUser(UserDeleteInputDTO userDeleteInputDTO, int userId);
+
+        /// <summary>
+        /// Change password
+        /// </summary>
+        /// <param name="inputDto"></param>
+        /// <returns></returns>
+        Task ChangePassword(UserPasswordChangeInputDTO inputDto);
     }
 }

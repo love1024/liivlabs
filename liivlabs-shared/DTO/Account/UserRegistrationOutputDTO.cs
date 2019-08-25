@@ -34,5 +34,10 @@ namespace liivlabs_shared.DTO.Account
         /// Email verified or not
         /// </summary>
         public bool EmailVerified { get; set; }
+
+        /// <summary>
+        /// Password changed by user or not
+        /// </summary>
+        public bool PasswordChanged { get; set; }
     }
 }

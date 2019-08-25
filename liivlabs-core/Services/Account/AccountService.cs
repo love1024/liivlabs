@@ -86,6 +86,7 @@ namespace liivlabs_core.Services.Account
             UserEntity user = this.mapper.Map<UserEntity>(userRegistrationInput);
             user.passwordSalt = passwordSalt;
             user.passwordHash = passwordHash;
+            user.PasswordChanged = true;
             
             //Saved User with an ID
             UserEntity savedUser = await this.accountRepository.AddUser(user);
@@ -121,13 +122,17 @@ namespace liivlabs_core.Services.Account
             string token = this.authService.IssueNewToken(foundUser.Role);
             return new UserLoginOutputDTO()
             {
+                userId = foundUser.UserId,
                 EmailAddress = foundUser.EmailAddress,
                 FirstName = foundUser.FirstName,
                 LastName = foundUser.LastName,
                 EmailVerified = foundUser.EmailVerified,
                 Expire = DateTime.UtcNow.AddDays(2),
                 token = token,
-                Role = foundUser.Role
+                Role = foundUser.Role,
+                PasswordChanged = foundUser.PasswordChanged,
+                MaxUsers = foundUser.MaxUsers,
+                AddedUsers = foundUser.AddedUsers
             };
         }
 
@@ -155,6 +160,7 @@ namespace liivlabs_core.Services.Account
             foundUser.passwordHash = passwordHash;
             foundUser.passwordSalt = passwordSalt;
             foundUser.PasswordReset = true;
+            foundUser.PasswordChanged = true;
 
             // Update user
             await this.accountRepository.UpdateUser(foundUser);

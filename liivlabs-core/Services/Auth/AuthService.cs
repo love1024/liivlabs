@@ -52,6 +52,7 @@ namespace liivlabs_core.Services.Auth
         /// <returns></returns>
         public string IssueNewToken(string role = Roles.User)
         {
+            role = role == null ? Roles.User : role;
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(this.configuration["Secret"]);
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
