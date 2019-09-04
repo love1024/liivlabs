@@ -1,15 +1,18 @@
 ﻿using liivlabs_shared.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Xabe.FFmpeg;
 using Google.Cloud.Speech.V1;
 using Grpc.Auth;
 using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System;
+using liivlabs_shared.Entities.File;
+using liivlabs_shared.Interfaces;
+using liivlabs_shared.Interfaces.Repository;
 
 /**
  * File Service 
@@ -18,24 +21,69 @@ namespace liivlabs_core.Services
 {
     public class FileService : IFileService
     {
+        private IFileRepository fileRepository;
+
         private string folderPath = "files";
 
         private string ffmpegPath = "D:/ffmpeg/ffmpeg/bin/";
 
         private string audioFileExtension = ".raw";
 
-        public async Task<string> SaveFile(IFormFile file)
+        public FileService(IFileRepository fileRepository)
+        {
+            this.fileRepository = fileRepository;
+        }
+
+        public async Task SpeechToText(IFormFile file, string userEmail)
+        {
+            string originalName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            string extension = Path.GetExtension(originalName);
+            string uniqueName = Guid.NewGuid().ToString();
+            string videoFileName = uniqueName + '.' + extension;
+            string audioFileName = uniqueName + ".raw";
+
+            // Store file local first to convert to audio
+            string videoFilefullPath = await this.SaveFile(file, videoFileName);
+
+            // Convert local store file to audio file and store it local also
+            string audioSavedFile = await this.ConvertToAudioFile(videoFilefullPath);
+
+            // Save both original and audio file to google cloud
+            await this.SaveFileToGoogleCloud(audioSavedFile, audioFileName);
+            await this.SaveFileToGoogleCloud(videoFilefullPath, videoFileName);
+
+            // Now use cloud uploaded audio file to convert it into text using google speech to text
+            string response = await this.ConvertSpeechFileToText(audioFileName);
+
+            // Delete local file as already uploaded to google cloud
+            File.Delete(audioSavedFile);
+            File.Delete(videoFilefullPath);
+
+            // Store information about file in database
+            FileEntity fileToSave = new FileEntity()
+            {
+                AudioFileName = audioFileName,
+                OriginalName = originalName,
+                Text = response,
+                UserEmail = userEmail,
+                VideoFileName = videoFileName,
+                OriginalSize = file.Length,
+                createdAt = DateTime.Now,
+                editedAt = DateTime.Now
+            };
+
+            await this.fileRepository.SaveFile(fileToSave);
+        }
+
+        public async Task<string> SaveFile(IFormFile file, string name)
         {
             string pathToSave = Path.Combine(Directory.GetCurrentDirectory(), this.folderPath);
             if (file.Length > 0)
             {
-                string originalName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                string extension = Path.GetExtension(originalName);
-                string filename = Guid.NewGuid().ToString() + '.' + extension;
-                string fullPath = Path.Combine(pathToSave, filename);
+                string fullPath = Path.Combine(pathToSave, name);
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                    await file.CopyToAsync(stream);
+                   await file.CopyToAsync(stream);
                 }
 
                 return fullPath;
@@ -44,12 +92,26 @@ namespace liivlabs_core.Services
             return "";
         }
 
+        public async Task<Google.Apis.Storage.v1.Data.Object> SaveFileToGoogleCloud(string filePath, string name)
+        {
+            string keyPath = "D:/test/test.json";
+            var credential = GoogleCredential.FromFile(keyPath);
+            var storage = StorageClient.Create(credential);
+
+            string bucketName = "eznotes-user-files";
+            using (var stream = File.OpenRead(filePath))
+            {
+                var response =  await storage.UploadObjectAsync(bucketName, name, null, stream);
+                return response;
+            }
+        }
+
         public async Task<string> ConvertToAudioFile(string filePath)
         {
             FFmpeg.ExecutablesPath = this.ffmpegPath;
 
             //Get latest version of FFmpeg. It's great idea if you don't know if you had installed FFmpeg.
-            await FFmpeg.GetLatestVersion();
+            // await FFmpeg.GetLatestVersion();
 
             //Save file to the same location with changed extension
             string outputFileName = Path.ChangeExtension(filePath, this.audioFileExtension);
@@ -67,9 +129,10 @@ namespace liivlabs_core.Services
             return outputFileName;
         }
 
-        public async Task<LongRunningRecognizeResponse> ConvertSpeechFileToText(string filePath)
+        public async Task<string> ConvertSpeechFileToText(string fileName)
         {
             string keyPath = "D:/test/test.json";
+            string URI = "gs://eznotes-user-files/" + fileName;
 
             // Create credential from secret file
             var credential = GoogleCredential.FromFile(keyPath)
@@ -83,18 +146,15 @@ namespace liivlabs_core.Services
                                 Encoding = RecognitionConfig.Types.AudioEncoding.Linear16,
                                 SampleRateHertz = 16000,
                                 LanguageCode = "en",
-                            }, RecognitionAudio.FromFile(filePath));
+                                EnableWordTimeOffsets = true,
+                                EnableSeparateRecognitionPerChannel = true,
+                                EnableAutomaticPunctuation = true
+                            }, RecognitionAudio.FromStorageUri(URI));
 
             longOperation = await longOperation.PollUntilCompletedAsync();
-            return longOperation.Result;
-
-//            foreach (var result in response.Results)
- //           {
-   //             foreach (var alternative in result.Alternatives)
-       //         {
-    //                Console.WriteLine(alternative.Transcript);
-     //           }
-       //     }
+            string response = JsonConvert.SerializeObject(longOperation.Result.Results);
+            
+            return response;
         }
     }
 }

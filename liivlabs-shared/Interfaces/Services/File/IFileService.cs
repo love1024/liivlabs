@@ -8,14 +8,18 @@ using System.Threading.Tasks;
 /** 
  * File Service
  */
-namespace liivlabs_shared.Interfaces.Services
+namespace liivlabs_shared.Interfaces
 {
     public interface IFileService
     {
-        Task<string> SaveFile(IFormFile file);
+        Task SpeechToText(IFormFile file, string userEmail);
+
+        Task<string> SaveFile(IFormFile file, string name);
 
         Task<string> ConvertToAudioFile(string filePath);
 
-        Task<LongRunningRecognizeResponse> ConvertSpeechFileToText(string filePath);
+        Task<Google.Apis.Storage.v1.Data.Object> SaveFileToGoogleCloud(string filePath, string name);
+
+        Task<string> ConvertSpeechFileToText(string filePath);
     }
 }

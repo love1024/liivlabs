@@ -1,5 +1,6 @@
 ﻿using liivlabs_shared.Entities;
 using liivlabs_shared.Entities.Account;
+using liivlabs_shared.Entities.File;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,7 @@ namespace liivlabs_infrastructure.EntityFramework
         public DbSet<UserEntity> User { get; set; }
 
         public DbSet<UserAccessEntity> UserAccess { get; set; }
+
+        public DbSet<FileEntity> Files { get; set; }
     }
 }

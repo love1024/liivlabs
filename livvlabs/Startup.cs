@@ -27,6 +27,9 @@ using liivlabs_shared.Interfaces.Repository.Access;
 using liivlabs_infrastructure.Repositories.Access;
 using liivlabs_shared.Interfaces.Services.Access;
 using liivlabs_core.Services;
+using liivlabs_shared.Interfaces;
+using liivlabs_shared.Interfaces.Repository;
+using liivlabs_infrastructure.Repositories.File;
 
 namespace livvlabs
 {
@@ -85,6 +88,7 @@ namespace livvlabs
             services.AddScoped<IUserAccessRepository, UserAccessRepository>();
             services.AddScoped<IAccessService, AccessService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IFileRepository, FileRepository>();
 
 
             //Sql server setup

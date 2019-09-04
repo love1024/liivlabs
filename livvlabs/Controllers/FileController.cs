@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Xabe.FFmpeg;
-using Google.Cloud.Speech.V1;
-using Grpc.Auth;
-using Google.Apis.Auth.OAuth2;
-using liivlabs_shared.Interfaces.Services;
+using liivlabs_shared.Interfaces;
 
 namespace liivlabs.Controllers
 {
@@ -26,14 +20,11 @@ namespace liivlabs.Controllers
         }
         
         [HttpPost("upload")]
-        public async Task uploadFile([FromForm] IFormFile file)
+        public void uploadFile([FromForm] IFormFile file, string email)
         {
             try
             {
-                string fullPath = await this.fileService.SaveFile(file);
-                string audioFile = await this.fileService.ConvertToAudioFile(fullPath);
-
-                LongRunningRecognizeResponse respone =  await this.fileService.ConvertSpeechFileToText(audioFile);
+                this.fileService.SpeechToText(file, email);
             }
             catch (Exception e)
             {
