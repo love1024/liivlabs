@@ -4,6 +4,7 @@ using liivlabs_shared.DTO;
 using liivlabs_shared.DTO.Account;
 using liivlabs_shared.DTO.User;
 using liivlabs_shared.Entities.Account;
+using liivlabs_shared.Entities.File;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,6 +26,8 @@ namespace liivlabs_core.Mapper.Account
             CreateMap<UserUpdateInputDTO, UserEntity>();
             CreateMap<UserEntity, UserEntity>();
             CreateMap<UserAddInputDTO, UserEntity>();
+
+            CreateMap<FileEntity, FileOutputDTO>();
         }
     }
 }

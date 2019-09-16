@@ -13,6 +13,10 @@ using System;
 using liivlabs_shared.Entities.File;
 using liivlabs_shared.Interfaces;
 using liivlabs_shared.Interfaces.Repository;
+using liivlabs_shared.DTO;
+using System.Collections.Generic;
+using AutoMapper;
+using System.Net.Http;
 
 /**
  * File Service 
@@ -29,9 +33,14 @@ namespace liivlabs_core.Services
 
         private string audioFileExtension = ".raw";
 
-        public FileService(IFileRepository fileRepository)
+        private IMapper mapper;
+
+        string bucketName = "eznotes-user-files";
+
+        public FileService(IFileRepository fileRepository, IMapper mapper)
         {
             this.fileRepository = fileRepository;
+            this.mapper = mapper;
         }
 
         public async Task SpeechToText(IFormFile file, string userEmail)
@@ -98,10 +107,9 @@ namespace liivlabs_core.Services
             var credential = GoogleCredential.FromFile(keyPath);
             var storage = StorageClient.Create(credential);
 
-            string bucketName = "eznotes-user-files";
             using (var stream = File.OpenRead(filePath))
             {
-                var response =  await storage.UploadObjectAsync(bucketName, name, null, stream);
+                var response =  await storage.UploadObjectAsync(this.bucketName, name, null, stream);
                 return response;
             }
         }
@@ -155,6 +163,28 @@ namespace liivlabs_core.Services
             string response = JsonConvert.SerializeObject(longOperation.Result.Results);
             
             return response;
+        }
+
+        public async Task<List<FileOutputDTO>> GetFilesOfUser(string email)
+        {
+            var list = await this.fileRepository.GetFileOfUser(email);
+
+            return this.mapper.Map<List<FileOutputDTO>>(list);
+        }
+
+        public async Task<FileURLOutputDTO> GetFileUrl(string filename)
+        {
+            string keyPath = "D:/test/test.json";
+            using (Stream stream = new FileStream(keyPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var credential = ServiceAccountCredential.FromServiceAccountData(stream);
+                UrlSigner urlSigner = UrlSigner.FromServiceAccountCredential(credential);
+                var url = await urlSigner.SignAsync(this.bucketName, filename, TimeSpan.FromHours(1), HttpMethod.Get);
+                return new FileURLOutputDTO()
+                {
+                    Url = url
+                };
+            }
         }
     }
 }
