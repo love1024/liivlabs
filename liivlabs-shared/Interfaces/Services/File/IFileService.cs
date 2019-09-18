@@ -26,5 +26,7 @@ namespace liivlabs_shared.Interfaces
         Task<List<FileOutputDTO>> GetFilesOfUser(string email);
 
         Task<FileURLOutputDTO> GetFileUrl(string filename);
+
+        Task<FileOutputDTO> GetFileAsync(string filename);
     }
 }

@@ -1,9 +1,9 @@
-﻿using liivlabs_shared.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
 using Xabe.FFmpeg;
 using Google.Cloud.Speech.V1;
+//using Google.Cloud.Speech.V1P1Beta1;
 using Grpc.Auth;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
@@ -29,7 +29,7 @@ namespace liivlabs_core.Services
 
         private string folderPath = "files";
 
-        private string ffmpegPath = "D:/ffmpeg/ffmpeg/bin/";
+        private string ffmpegPath = "D:/love/ffmpeg-20190914-197985c-win64-static/ffmpeg-20190914-197985c-win64-static/bin";
 
         private string audioFileExtension = ".raw";
 
@@ -155,6 +155,7 @@ namespace liivlabs_core.Services
                                 SampleRateHertz = 16000,
                                 LanguageCode = "en",
                                 EnableWordTimeOffsets = true,
+                                //EnableSpeakerDiarization = true,
                                 EnableSeparateRecognitionPerChannel = true,
                                 EnableAutomaticPunctuation = true
                             }, RecognitionAudio.FromStorageUri(URI));
@@ -185,6 +186,13 @@ namespace liivlabs_core.Services
                     Url = url
                 };
             }
+        }
+
+        public async Task<FileOutputDTO> GetFileAsync(string filename)
+        {
+            var file = await this.fileRepository.GetFile(filename);
+
+            return this.mapper.Map<FileOutputDTO>(file);
         }
     }
 }
