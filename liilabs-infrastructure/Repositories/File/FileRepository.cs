@@ -25,6 +25,11 @@ namespace liivlabs_infrastructure.Repositories.File
             return await this.context.Files.Where(file => file.UserEmail == email).ToListAsync();            
         }
 
+        public async Task<FileEntity> GetFile(string filename)
+        {
+            return await context.Files.Where(file => file.VideoFileName == filename).FirstOrDefaultAsync();
+        }
+
         public async Task SaveFile(FileEntity file)
         {
             try
@@ -36,5 +41,6 @@ namespace liivlabs_infrastructure.Repositories.File
                 Console.WriteLine(e);
             }
         }
+
     }
 }

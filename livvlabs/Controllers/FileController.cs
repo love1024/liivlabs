@@ -60,5 +60,18 @@ namespace liivlabs.Controllers
             }
         }
 
+        [HttpGet("file")]
+        public async Task<ActionResult<FileOutputDTO>> GetFile(string filename)
+        {
+            try
+            {
+                return await this.fileService.GetFileAsync(filename);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = new List<string> { ex.Message } });
+            }
+        }
+
     }
 }

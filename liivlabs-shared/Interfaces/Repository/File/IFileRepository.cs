@@ -12,5 +12,7 @@ namespace liivlabs_shared.Interfaces.Repository
         Task SaveFile(FileEntity file);
 
         Task<List<FileEntity>> GetFileOfUser(string email);
+
+        Task<FileEntity> GetFile(string filename);
     }
 }
