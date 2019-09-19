@@ -27,6 +27,8 @@ namespace liivlabs_core.Services
     {
         private IFileRepository fileRepository;
 
+        private IFileAlertRepository fileAlertRepository;
+
         private string folderPath = "files";
 
         private string ffmpegPath = "D:/love/ffmpeg-20190914-197985c-win64-static/ffmpeg-20190914-197985c-win64-static/bin";
@@ -37,9 +39,10 @@ namespace liivlabs_core.Services
 
         string bucketName = "eznotes-user-files";
 
-        public FileService(IFileRepository fileRepository, IMapper mapper)
+        public FileService(IFileRepository fileRepository,IFileAlertRepository fileAlertRepository, IMapper mapper)
         {
             this.fileRepository = fileRepository;
+            this.fileAlertRepository = fileAlertRepository;
             this.mapper = mapper;
         }
 
@@ -82,6 +85,7 @@ namespace liivlabs_core.Services
             };
 
             await this.fileRepository.SaveFile(fileToSave);
+            await this.UpdateStatusForUser(userEmail, true);
         }
 
         public async Task<string> SaveFile(IFormFile file, string name)
@@ -170,7 +174,7 @@ namespace liivlabs_core.Services
         {
             var list = await this.fileRepository.GetFileOfUser(email);
 
-            return this.mapper.Map<List<FileOutputDTO>>(list);
+            return this.mapper.Map<List<FileEntity>, List<FileOutputDTO>>(list);
         }
 
         public async Task<FileURLOutputDTO> GetFileUrl(string filename)
@@ -194,5 +198,19 @@ namespace liivlabs_core.Services
 
             return this.mapper.Map<FileOutputDTO>(file);
         }
+
+        public async Task<bool> CheckNewFile(string email)
+        {
+            var result = await this.fileAlertRepository.CheckNewFile(email);
+            return result;
+        }
+        public async Task<String> UpdateStatusForUser(string email, bool status)
+        {
+             await this.fileAlertRepository.UpdateStatusForUser(email,status);
+             return "";
+        }
+
     }
+
 }
+

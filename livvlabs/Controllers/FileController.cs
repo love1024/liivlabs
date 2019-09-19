@@ -73,5 +73,30 @@ namespace liivlabs.Controllers
             }
         }
 
+        [HttpGet("alert")]
+        public async Task<bool> CheckNewFile(string email)
+        {
+            try
+            {
+                return await this.fileService.CheckNewFile(email);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        [HttpPost("alert")]
+        public async Task<String> UpdateStatusForUser([FromBody] FileAlertDTO fileAlertDTO)
+        {
+            try
+            {
+                return await this.fileService.UpdateStatusForUser(fileAlertDTO.Email, fileAlertDTO.AnyNew);
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+        }
     }
 }

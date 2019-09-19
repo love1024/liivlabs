@@ -22,7 +22,8 @@ namespace liivlabs_infrastructure.Repositories.File
 
         public async Task<List<FileEntity>> GetFileOfUser(string email)
         {
-            return await this.context.Files.Where(file => file.UserEmail == email).ToListAsync();            
+            var a =await this.context.Files.Where(file => file.UserEmail == email).ToListAsync();
+            return a;
         }
 
         public async Task<FileEntity> GetFile(string filename)

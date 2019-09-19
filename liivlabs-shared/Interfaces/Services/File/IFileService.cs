@@ -28,5 +28,9 @@ namespace liivlabs_shared.Interfaces
         Task<FileURLOutputDTO> GetFileUrl(string filename);
 
         Task<FileOutputDTO> GetFileAsync(string filename);
+
+        Task<bool> CheckNewFile(string email);
+
+        Task<String> UpdateStatusForUser(string email, bool status);
     }
 }
