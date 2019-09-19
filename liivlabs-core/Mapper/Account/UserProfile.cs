@@ -8,6 +8,7 @@ using liivlabs_shared.Entities.File;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 /// <summary>
 /// User Profile to map
