@@ -32,5 +32,7 @@ namespace liivlabs_shared.Interfaces
         Task<bool> CheckNewFile(string email);
 
         Task<String> UpdateStatusForUser(string email, bool status);
+
+        Task<String> ChangeFileText(string text, int id);
     }
 }

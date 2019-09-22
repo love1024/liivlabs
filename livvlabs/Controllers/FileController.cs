@@ -98,5 +98,19 @@ namespace liivlabs.Controllers
                 return ex.ToString();
             }
         }
+
+        [HttpPost("changeFileText")]
+        public async Task<String> ChangeFileText([FromBody] FileTextDTO fileTextDTO, int fileId)
+        {
+            try
+            {
+                return await this.fileService.ChangeFileText(fileTextDTO.Text, fileId);
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+
+        }
     }
 }

@@ -43,5 +43,18 @@ namespace liivlabs_infrastructure.Repositories.File
             }
         }
 
+        public async Task ChangeFileText(string text, int id)
+        {
+            try
+            {
+                var file = await this.context.Files.Where(f => f.FileId == id).FirstOrDefaultAsync();
+                file.Text = text;
+                await this.context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }
