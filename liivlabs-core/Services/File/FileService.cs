@@ -210,6 +210,11 @@ namespace liivlabs_core.Services
              return "";
         }
 
+        public async Task<string> ChangeFileText(string text, int id)
+        {
+            await this.fileRepository.ChangeFileText(text, id);
+            return "";
+        }
     }
 
 }

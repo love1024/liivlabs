@@ -14,5 +14,7 @@ namespace liivlabs_shared.Interfaces.Repository
         Task<List<FileEntity>> GetFileOfUser(string email);
 
         Task<FileEntity> GetFile(string filename);
+
+        Task ChangeFileText(string text, int id);
     }
 }
