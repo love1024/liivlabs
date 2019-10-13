@@ -56,5 +56,41 @@ namespace liivlabs_infrastructure.Repositories.File
                 Console.WriteLine(e);
             }
         }
+
+        public async Task DeleteFile(int id)
+        {
+            try
+            {
+                FileEntity file = new FileEntity() { FileId = id };
+                this.context.Files.Attach(file);
+                this.context.Remove(file);
+                await this.context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public async Task ChangeName(int id, string name)
+        {
+
+            try
+            {
+                var file = await this.context.Files.Where(f => f.FileId == id).FirstOrDefaultAsync();
+                file.OriginalName = name;
+                await this.context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public async Task UpdateFile(FileEntity file)
+        {
+            this.context.Files.Update(file);
+            await this.context.SaveChangesAsync();
+        }
     }
 }

@@ -16,5 +16,11 @@ namespace liivlabs_shared.Interfaces.Repository
         Task<FileEntity> GetFile(string filename);
 
         Task ChangeFileText(string text, int id);
+
+        Task DeleteFile(int id);
+
+        Task ChangeName(int id, string name);
+
+        Task UpdateFile(FileEntity file);
     }
 }

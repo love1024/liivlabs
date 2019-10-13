@@ -28,6 +28,7 @@ namespace liivlabs_core.Mapper.Account
             CreateMap<UserEntity, UserEntity>();
             CreateMap<UserAddInputDTO, UserEntity>();
             CreateMap<FileEntity, FileOutputDTO>();
+            CreateMap<FileOutputDTO, FileEntity>();
         }
     }
 }

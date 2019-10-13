@@ -99,6 +99,32 @@ namespace liivlabs.Controllers
             }
         }
 
+        [HttpGet("delete")]
+        public async Task DeleteFile(int id)
+        {
+            try
+            {
+                await this.fileService.DeleteFile(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        [HttpPost("filename")]
+        public async Task ChangeName([FromBody] FileTextDTO fileTextDTO, int fileId)
+        {
+            try
+            {
+                await this.fileService.ChangeName(fileId, fileTextDTO.Text);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
         [HttpPost("changeFileText")]
         public async Task<String> ChangeFileText([FromBody] FileTextDTO fileTextDTO, int fileId)
         {
@@ -111,6 +137,19 @@ namespace liivlabs.Controllers
                 return ex.ToString();
             }
 
+        }
+
+        [HttpPost("update")]
+        public async Task UpdateFile([FromBody] FileOutputDTO file)
+        {
+            try
+            {
+                await this.fileService.UpdateFile(file);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }

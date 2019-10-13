@@ -34,5 +34,11 @@ namespace liivlabs_shared.Interfaces
         Task<String> UpdateStatusForUser(string email, bool status);
 
         Task<String> ChangeFileText(string text, int id);
+
+        Task DeleteFile(int id);
+
+        Task ChangeName(int id, string name);
+
+        Task UpdateFile(FileOutputDTO file);
     }
 }

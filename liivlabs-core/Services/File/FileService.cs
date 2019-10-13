@@ -31,7 +31,13 @@ namespace liivlabs_core.Services
 
         private string folderPath = "files";
 
-        private string ffmpegPath = "D:/love/ffmpeg-20190914-197985c-win64-static/ffmpeg-20190914-197985c-win64-static/bin";
+        private string ffmpegPath = "/usr/bin";
+
+        private string keypath = "./key/test.json";
+
+        //private string ffmpegPath = "D:/ffmpeg/ffmpeg/bin";
+
+        //private string keypath = "D:/test/test.json";
 
         private string audioFileExtension = ".raw";
 
@@ -107,8 +113,7 @@ namespace liivlabs_core.Services
 
         public async Task<Google.Apis.Storage.v1.Data.Object> SaveFileToGoogleCloud(string filePath, string name)
         {
-            string keyPath = "D:/test/test.json";
-            var credential = GoogleCredential.FromFile(keyPath);
+            var credential = GoogleCredential.FromFile(this.keypath);
             var storage = StorageClient.Create(credential);
 
             using (var stream = File.OpenRead(filePath))
@@ -143,11 +148,10 @@ namespace liivlabs_core.Services
 
         public async Task<string> ConvertSpeechFileToText(string fileName)
         {
-            string keyPath = "D:/test/test.json";
             string URI = "gs://eznotes-user-files/" + fileName;
 
             // Create credential from secret file
-            var credential = GoogleCredential.FromFile(keyPath)
+            var credential = GoogleCredential.FromFile(this.keypath)
                             .CreateScoped(SpeechClient.DefaultScopes);
             var channel = new Grpc.Core.Channel(SpeechClient.DefaultEndpoint.ToString(),
                             credential.ToChannelCredentials());
@@ -179,8 +183,7 @@ namespace liivlabs_core.Services
 
         public async Task<FileURLOutputDTO> GetFileUrl(string filename)
         {
-            string keyPath = "D:/test/test.json";
-            using (Stream stream = new FileStream(keyPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (Stream stream = new FileStream(this.keypath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 var credential = ServiceAccountCredential.FromServiceAccountData(stream);
                 UrlSigner urlSigner = UrlSigner.FromServiceAccountCredential(credential);
@@ -214,6 +217,22 @@ namespace liivlabs_core.Services
         {
             await this.fileRepository.ChangeFileText(text, id);
             return "";
+        }
+
+        public async Task DeleteFile(int id)
+        {
+            await this.fileRepository.DeleteFile(id);
+        }
+
+        public async Task ChangeName(int id, string name)
+        {
+            await this.fileRepository.ChangeName(id, name);
+        }
+
+        public async Task UpdateFile(FileOutputDTO file)
+        {
+            FileEntity entity = this.mapper.Map<FileEntity>(file);
+            await this.fileRepository.UpdateFile(entity);
         }
     }
 
