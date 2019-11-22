@@ -92,5 +92,12 @@ namespace liivlabs_infrastructure.Repositories.File
             this.context.Files.Update(file);
             await this.context.SaveChangesAsync();
         }
+
+        public async Task<bool> CheckNewFile(string email)
+        {
+            var newFile = await context.Files.Where(file => file.isNew).FirstOrDefaultAsync();
+            return newFile != null ? true : false;
+        }
+
     }
 }

@@ -22,5 +22,7 @@ namespace liivlabs_shared.Interfaces.Repository
         Task ChangeName(int id, string name);
 
         Task UpdateFile(FileEntity file);
+
+        Task<bool> CheckNewFile(string email);
     }
 }

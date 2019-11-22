@@ -11,8 +11,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.1" />
     <PackageReference Include="Google.Apis.Speech.v1p1beta1" Version="1.41.1.1702" />
-    <PackageReference Include="Google.Cloud.Speech.V1" Version="1.2.0" />
-    <PackageReference Include="Google.Cloud.Speech.V1P1Beta1" Version="1.0.0-beta02" />
+    <PackageReference Include="Google.Cloud.Speech.V1P1Beta1" Version="1.0.0-beta03" />
     <PackageReference Include="Google.Cloud.Storage.V1" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />

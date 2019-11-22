@@ -25,5 +25,7 @@ namespace liivlabs_shared.Entities.File
         public DateTime createdAt { get; set; }
 
         public DateTime editedAt { get; set; }
+
+        public bool isNew { get; set; }
     }
 }

@@ -2,8 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Xabe.FFmpeg;
-using Google.Cloud.Speech.V1;
-//using Google.Cloud.Speech.V1P1Beta1;
+//using Google.Cloud.Speech.V1;
+using Google.Cloud.Speech.V1P1Beta1;
 using Grpc.Auth;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
@@ -27,17 +27,15 @@ namespace liivlabs_core.Services
     {
         private IFileRepository fileRepository;
 
-        private IFileAlertRepository fileAlertRepository;
-
         private string folderPath = "files";
 
-        private string ffmpegPath = "/usr/bin";
+       // private string ffmpegPath = "/usr/bin";
 
-        private string keypath = "./key/test.json";
+       // private string keypath = "./key/test.json";
 
-        //private string ffmpegPath = "D:/ffmpeg/ffmpeg/bin";
+        private string ffmpegPath = "D:/ffmpeg/ffmpeg/bin";
 
-        //private string keypath = "D:/test/test.json";
+        private string keypath = "D:/test/test.json";
 
         private string audioFileExtension = ".raw";
 
@@ -45,10 +43,9 @@ namespace liivlabs_core.Services
 
         string bucketName = "eznotes-user-files";
 
-        public FileService(IFileRepository fileRepository,IFileAlertRepository fileAlertRepository, IMapper mapper)
+        public FileService(IFileRepository fileRepository, IMapper mapper)
         {
             this.fileRepository = fileRepository;
-            this.fileAlertRepository = fileAlertRepository;
             this.mapper = mapper;
         }
 
@@ -87,11 +84,11 @@ namespace liivlabs_core.Services
                 VideoFileName = videoFileName,
                 OriginalSize = file.Length,
                 createdAt = DateTime.Now,
-                editedAt = DateTime.Now
+                editedAt = DateTime.Now,
+                isNew = true
             };
 
             await this.fileRepository.SaveFile(fileToSave);
-            await this.UpdateStatusForUser(userEmail, true);
         }
 
         public async Task<string> SaveFile(IFormFile file, string name)
@@ -161,10 +158,10 @@ namespace liivlabs_core.Services
                             {
                                 Encoding = RecognitionConfig.Types.AudioEncoding.Linear16,
                                 SampleRateHertz = 16000,
-                                LanguageCode = "en",
+                                LanguageCode = "en-US",
                                 EnableWordTimeOffsets = true,
-                                //EnableSpeakerDiarization = true,
-                                EnableSeparateRecognitionPerChannel = true,
+                                Model = "video",
+                                EnableSpeakerDiarization = true,
                                 EnableAutomaticPunctuation = true
                             }, RecognitionAudio.FromStorageUri(URI));
 
@@ -204,13 +201,7 @@ namespace liivlabs_core.Services
 
         public async Task<bool> CheckNewFile(string email)
         {
-            var result = await this.fileAlertRepository.CheckNewFile(email);
-            return result;
-        }
-        public async Task<String> UpdateStatusForUser(string email, bool status)
-        {
-             await this.fileAlertRepository.UpdateStatusForUser(email,status);
-             return "";
+            return await this.fileRepository.CheckNewFile(email);
         }
 
         public async Task<string> ChangeFileText(string text, int id)
@@ -232,8 +223,10 @@ namespace liivlabs_core.Services
         public async Task UpdateFile(FileOutputDTO file)
         {
             FileEntity entity = this.mapper.Map<FileEntity>(file);
+            entity.isNew = false;
             await this.fileRepository.UpdateFile(entity);
         }
+
     }
 
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using liivlabs_infrastructure.EntityFramework;
 
 namespace liivlabs_infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20191120083417_fileid")]
+    partial class fileid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +56,23 @@ namespace liivlabs_infrastructure.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("liivlabs_shared.Entities.File.FileAlertEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email");
+
+                    b.Property<int>("FileId");
+
+                    b.Property<bool>("IsNew");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileAlert");
+                });
+
             modelBuilder.Entity("liivlabs_shared.Entities.File.FileEntity", b =>
                 {
                     b.Property<int>("FileId")
@@ -75,8 +94,6 @@ namespace liivlabs_infrastructure.Migrations
                     b.Property<DateTime>("createdAt");
 
                     b.Property<DateTime>("editedAt");
-
-                    b.Property<bool>("isNew");
 
                     b.HasKey("FileId");
 

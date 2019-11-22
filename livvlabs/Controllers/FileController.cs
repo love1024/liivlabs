@@ -22,6 +22,7 @@ namespace liivlabs.Controllers
         }
         
         [HttpPost("upload")]
+        [DisableRequestSizeLimit]
         public async Task uploadFile([FromForm] IFormFile file, string email)
         {
             try
@@ -83,19 +84,6 @@ namespace liivlabs.Controllers
             catch (Exception ex)
             {
                 return false;
-            }
-        }
-
-        [HttpPost("alert")]
-        public async Task<String> UpdateStatusForUser([FromBody] FileAlertDTO fileAlertDTO)
-        {
-            try
-            {
-                return await this.fileService.UpdateStatusForUser(fileAlertDTO.Email, fileAlertDTO.AnyNew);
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
             }
         }
 

@@ -23,5 +23,7 @@ namespace liivlabs_shared.DTO
         public DateTime createdAt { get; set; }
 
         public DateTime editedAt { get; set; }
+
+        public bool isNew { get; set; }
     }
 }
