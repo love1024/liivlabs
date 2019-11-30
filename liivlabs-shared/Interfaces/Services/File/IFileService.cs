@@ -16,6 +16,8 @@ namespace liivlabs_shared.Interfaces
 
         Task<string> SaveFile(IFormFile file, string name);
 
+        Task SaveFileWithText(FileOutputDTO file, string email);
+
         Task<string> ConvertToAudioFile(string filePath);
 
         Task<Google.Apis.Storage.v1.Data.Object> SaveFileToGoogleCloud(string filePath, string name);

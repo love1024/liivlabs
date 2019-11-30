@@ -35,6 +35,20 @@ namespace liivlabs.Controllers
             }
         }
 
+        [HttpPost("uploadtext")]
+        [DisableRequestSizeLimit]
+        public async Task uploadFileWithText([FromBody] FileOutputDTO file, string email)
+        {
+            try
+            {
+                await this.fileService.SaveFileWithText(file, email);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         [HttpGet("files")]
         public async Task<ActionResult<List<FileOutputDTO>>> GetFilesOfUser(string email)
         {

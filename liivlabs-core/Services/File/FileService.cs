@@ -91,6 +91,21 @@ namespace liivlabs_core.Services
             await this.fileRepository.SaveFile(fileToSave);
         }
 
+        public async Task SaveFileWithText(FileOutputDTO file, string email)
+        {
+            FileEntity fileToSave = new FileEntity()
+            {
+                OriginalName = file.OriginalName,
+                VideoFileName = Guid.NewGuid().ToString(),
+                Text = file.Text,
+                UserEmail = email,
+                createdAt = DateTime.Now,
+                editedAt = DateTime.Now,
+                isNew = true
+            };
+            await this.fileRepository.SaveFile(fileToSave);
+        }
+
         public async Task<string> SaveFile(IFormFile file, string name)
         {
             string pathToSave = Path.Combine(Directory.GetCurrentDirectory(), this.folderPath);
@@ -160,9 +175,10 @@ namespace liivlabs_core.Services
                                 SampleRateHertz = 16000,
                                 LanguageCode = "en-US",
                                 EnableWordTimeOffsets = true,
-                                Model = "video",
+                                Model = "phone_call",
                                 EnableSpeakerDiarization = true,
-                                EnableAutomaticPunctuation = true
+                                EnableAutomaticPunctuation = true,
+                                UseEnhanced = true
                             }, RecognitionAudio.FromStorageUri(URI));
 
             longOperation = await longOperation.PollUntilCompletedAsync();
